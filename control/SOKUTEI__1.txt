@@ -1,0 +1,114 @@
+
+N10 DEF REAL SetLaser, SetPowder1, SetCarriergas1, SetStirrerSpeed1, SetPowder2, SetCarriergas2, SetStirrerSpeed2
+
+;Laser parameters
+N20 DEF REAL LAYERHEIGHT,NUMBERLAYERS,FEED,LENGTH
+N30 DEF REAL STARTX,STARTY,STARTZ,STARTC
+N40 DEF REAL COUNTER, COUNTEREND, DWELL
+N50 DEF REAL APPROACH, HIGHT
+N60 R1=0 ;�w���J�E���g�A�b�v
+N70 R2=200;���C���[�n�C�g��臒l�@����𒴂���ƃG���[�Ƃ���B
+ 
+;*****PROGRAM VARIABLES*****
+N80 LENGTH=40     	;LENGTH OF WALL
+N90 LAYERHEIGHT=0.4  ;LAYER HEIGHT�f�t�H���g�̃��C���[�n�C�g
+N100 NUMBERLAYERS=100 ;NUMBER OF PROGRAMMED LAYERS
+N110 FEED=1000 ;FEED RATE IN MM/MIN
+N120 DWELL=40  ;DWELL TIME IN SECONDS
+N130 APPROACH=80  ;OVER TRAVEL AMOUNT
+
+;START POSITION
+N140 STARTX=-50
+N150 STARTY=35
+N160 STARTZ=17.245
+N170 STARTC=0
+
+N180 ; Settings Parameter Laser
+N190 SetLaser=2000 ;H52 LASER POWER in mV
+N200 SetPowder1=0 ; H53 SPEED POWDER DISC HOPPER 1 in mV 0..1000 => 0..10 U/min
+N210 SetCarriergas1=0 ; H54 CARRIER GAS FLOW HOPPER 1 in mV 0..1000 => 0..10 U/min
+N220 SetStirrerSpeed1=0 ; H55 STIRRER SPEED HOPPER 1 in mV 0..1000 => 0.. 100 percent
+N230 SetPowder2=471 ; H56 SPEED POWDER DISC HOPPER 2 in mV ...1000 => 0..10 U/min
+N240 SetCarriergas2=600 ; H57 CARRIER GAS FLOW HOPPER 2 in mV 0..1000 => 0..10 U/min
+N250 SetStirrerSpeed2=500 ; H58 STIRRER SPEED HOPPER 2 in mV 0..1000 => 0.. 100 percent
+ 
+N260 STOPRE
+N270 G54
+
+N280 DM_RAPID(10) ;RAPID LIMIT IN %�@;�����葬�x10%�ɐ���
+N290 TRAFOOF;��[�_����OFF
+N300 G0 G153 Z0 D0 ;�`�����o���g�p����Ƃ��ɂ̓R�����g�A�E�g
+N310 G0 G153 Z0 D0
+N320 G0 A0 C=DC(0)
+ 
+;*****TOOL CHANGE*****
+;!!!RAPID = 10% FOR LASER TOOL CHANGE!!!
+N330 DM_RAPID(10)
+N340 T="LASER"
+N350 M6
+;*********************
+ 
+N360 DM_RAPID(10)
+N370 G0 G153 Z0 D0 
+N380 G0 G153 Z0 D0
+N390 G0 A0 C=DC(STARTC) 
+N400 G0 A0 C=DC(STARTC)
+
+N410 D1
+ 
+N420 STOPRE
+ 
+;START POSITION
+N430 G0 X=STARTX 
+N431 G0 Y=STARTY
+N440 G0 Z=STARTZ C=STARTC
+ 
+N450 Cladding_Para_on(SetLaser, SetPowder1, SetCarriergas1, SetStirrerSpeed1, SetPowder2, SetCarriergas2, SetStirrerSpeed2)
+ 
+;*****DEPOSITION_01*****
+N460 FOR COUNTER=1 TO NUMBERLAYERS/2
+N470 G1 X=IC(APPROACH) F=FEED
+N480 X=IC(LENGTH) M174
+N490 X=IC(APPROACH) M175
+N510 G4 F=DWELL  ;DWELL
+N520 R1=R1+1
+N530 STOPRE
+
+N560 IF (R0>R2);�`�F�b�N���@���C���[�n�C�gR0��R2��臒l�𒴂���ƃv���O�����I��
+N570 MSG(�gLAYER HIGHT ERROR�h)
+N580 ENDIF
+N590 IF (R0<-30.0) ; ���C���[�n�C�gR0���}�C�i�X�ɂȂ�ƃv���O�����I��
+N600 MSG(�gLAYER HIGHT ERROR�h)
+N610 ENDIF
+ 
+N620 Z=IC(R0);次の座標値入力
+N630 STOPRE
+
+N736 
+N720 G1 X=IC(-APPROACH) F=FEED
+N480 X=IC(-LENGTH) M174
+N490 X=IC(-APPROACH) M175
+N510 G4 F=DWELL  ;DWELL
+N520 R1=R1+1
+N530 STOPRE
+
+N560 IF (R0>R2);�`�F�b�N���@���C���[�n�C�gR0��R2��臒l�𒴂���ƃv���O�����I��
+N570 MSG(�gLAYER HIGHT ERROR�h)
+N580 ENDIF
+N590 IF (R0<-30.0) ; ���C���[�n�C�gR0���}�C�i�X�ɂȂ�ƃv���O�����I��
+N600 MSG(�gLAYER HIGHT ERROR�h)
+N610 ENDIF
+ 
+N620 Z=IC(R0)
+N721 
+N640 ENDFOR
+N650 STOPRE
+ 
+N660 Cladding_Para_off ;RESET CLADDING PARAMETERS
+N670 G0 G153 Z0 D0   	;Z AXIS MACHINE HOME
+N680 STOPRE
+N690 D1
+N700 G0 G153 X620    	;X & Y AXIS WORK HO
+N710 M30;END
+ 
+
