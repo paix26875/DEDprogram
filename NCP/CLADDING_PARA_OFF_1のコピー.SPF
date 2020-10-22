@@ -1,0 +1,20 @@
+PROC Cladding_Para_off_1
+;Version 1.1 16-02-02
+
+M11;C-AXIS-CLAMPING RELEASE
+M23;A-AXIS-CLAMPING RELEASE
+
+G4 F1
+H51=2	;Shutter Closed, SHIELDGAS ON, Powder OFF
+G4 F10	
+STOPRE	
+H51=0	;Shieldgas OFF
+G4 F1
+H52=0		;RESET Laser Power
+H53=0		;RESET Powder feed Disc 1
+H54=0		;RESET Carriergas Flow 1
+H55=0		;RESET Stirrer Speed 1
+H56=0		;RESET Powder feed Disc 2
+H57=0		;RESET Carriergas Flow 2
+H58=0		;RESET Stirrer Speed 2
+M17

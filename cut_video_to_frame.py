@@ -38,7 +38,7 @@ POWER=2000
 
 # mac
 
-save_all_frames('raw_data/1600_1000.avi', 'data/temp/result_1600_1000', 'sample_video_img')
+save_all_frames('raw_data/20200823/without_dwell_40.avi', 'frame_data/20200823/without_dwell_40', 'sample_video_img')
 
 """
 FEEDRATE=np.array([50,60,70,75,80,85,90,95,100,105,110,115,120])    

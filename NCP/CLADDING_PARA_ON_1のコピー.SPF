@@ -1,0 +1,182 @@
+PROC Cladding_Para_on_1(REAL SetLaser, REAL SetPowder1, REAL SetCarriergas1, REAL SetStirrerSpeed1, REAL SetPowder2, REAL SetCarriergas2, REAL SetStirrerSpeed2)
+;Version 1.1 16-02-02
+
+M11;C-AXIS-CLAMPING RELEASE
+M23;A-AXIS-CLAMPING RELEASE
+
+H51=0		;RESET Media switch (Shutter Closed, Shieldgas OFF, Powder feeder OFF)
+H52=0		;RESET Laser Power
+H53=0		;RESET Powder feed Disc 1
+H54=0		;RESET Carriergas Flow 1
+H55=0		;RESET Stirrer Speed 1
+H56=0		;RESET Powder feed Disc 2
+H57=0		;RESET Carriergas Flow 2
+H58=0		;RESET Stirrer Speed 2
+G4 F1
+
+;=================== Error Nachrichten bei Fehlerhafter Eingabe ===
+IF Setpowder1<=0 Gotof EinTopf
+IF Setpowder2<=0 Gotof EinTopf
+IF SetCarriergas1<=0 Gotof EinTopf
+IF SetCarriergas2<=0 Gotof EinTopf
+IF SetStirrerSpeed1<=0 Gotof EinTopf
+IF SetStirrerSpeed2>=1 Gotof ZweiTopf
+
+EinTopf:
+IF Setpowder1>=1 Gotof vertauschen1
+IF SetCarriergas1>=1 Gotof Error7
+IF SetStirrerSpeed1>=1 Gotof Error7
+Gotof Gaspruefung
+vertauschen1:
+IF SetCarriergas2>=1 Gotof Error7
+IF SetStirrerSpeed2>=1 Gotof Error7
+Gaspruefung:
+IF SetCarriergas1>=1 Gotof vertauschen2
+IF Setpowder1>=1 Gotof Error7
+IF SetStirrerSpeed1>=1 Gotof Error7
+Gotof Stirrerpruefung
+vertauschen2:
+IF Setpowder2>=1 Gotof Error7
+IF SetStirrerSpeed2>=1 Gotof Error7
+Stirrerpruefung:
+IF SetStirrerSpeed1>=1 Gotof vertauschen3
+IF Setpowder1>=1 Gotof Error7
+IF SetCarriergas1>=1 Gotof Error7
+Gotof Weitereerrors
+vertauschen3:
+IF Setpowder2>=1 Gotof Error7
+IF SetCarriergas2>=1 Gotof Error7
+Weitereerrors:
+
+IF Setpowder2>=1 Gotof ErrorGas
+IF Setpowder1<=0 Gotof Error1
+Gotof Weiter1
+
+ErrorGas:
+IF Setpowder1>=1 Gotof Error2
+Weiter1:
+IF SetCarriergas2>=1 Gotof ErrorStirrer
+IF SetCarriergas1<=0 Gotof Error3
+Gotof Weiter2
+
+ErrorStirrer:
+IF SetCarriergas1>=1 Gotof Error4
+Weiter2:
+IF SetStirrerSpeed2>=1 Gotof Programmstart
+IF SetStirrerSpeed1<=0 Gotof Error6
+Gotof Weiter3
+Programmstart:
+IF SetCarriergas1>=1 Gotof Error5
+Weiter3:
+
+ZweiTopf:
+IF Setpowder1>=1001 Gotof Error8
+IF Setpowder2>=1001 Gotof Error8
+IF SetCarriergas1>=1001 Gotof Error8
+IF SetCarriergas2>=1001 Gotof Error8
+IF SetStirrerSpeed1>=1001 Gotof Error8
+IF SetStirrerSpeed2>=1001 Gotof Error8
+;==================================================================
+
+
+IF SetPowder2<=0 Gotof Pulvertopf1
+IF Setpowder1>=1 Gotof Pulvertopf1u2
+Gotof Pulvertopf2
+
+
+;==================== Pulvertopf 1 ================================
+Pulvertopf1:
+H52=SetLaser            ;SET Laser Power (current)
+G4 F3
+H53=SetPowder1		    ;SET Powder feed revolution speed Disc 1
+H54=SetCarriergas1		;SET Carriergas Flow Hopper 1
+H55=SetStirrerSpeed1	;SET Stirrer Speed 1
+STOPRE
+G4 F2
+H51=3	               	;Shutter Open, Shieldgas ON
+G4 F6
+H53=SetPowder1		    ;SET Powder feed revolution speed Disc 1
+H54=SetCarriergas1		;SET Carriergas Flow Hopper 1
+H55=SetStirrerSpeed1	;SET Stirrer Speed 1
+G4 F1
+H51=7		            ;Shutter Open, Shieldgas ON, Powder ON
+G4 F5
+M17
+;==================================================================
+
+;================== Pulvertopf 2 ==================================
+Pulvertopf2:
+H52=SetLaser            ;SET Laser Power (current)
+G4 F3
+H56=SetPowder2		    ;SET Powder feed revolution speed Disc 2
+H57=SetCarriergas2		;SET Carriergas Flow Hopper 2
+H58=SetStirrerSpeed2	;SET Stirrer Speed 2
+STOPRE
+G4 F2
+H51=3		            ;Shutter Open, Shieldgas ON
+G4 F6
+H56=SetPowder2		    ;SET Powder feed revolution speed Disc 2
+H57=SetCarriergas2		;SET Carriergas Flow Hopper 2
+H58=SetStirrerSpeed2	;SET Stirrer Speed 2
+G4 F1
+H51=11	                ;Shutter Open, Shieldgas ON, Powder ON
+G4 F5
+M17
+;==================================================================
+
+;================== Pulvertopf 1 und 2=============================
+Pulvertopf1u2:
+H52=SetLaser            ;SET Laser Power (current)
+G4 F3
+H53=SetPowder1		    ;SET Powder feed revolution speed Disc 1
+H54=SetCarriergas1		;SET Carriergas Flow Hopper 1
+H55=SetStirrerSpeed1	;SET Stirrer Speed 1
+H56=SetPowder2		    ;SET Powder feed revolution speed Disc 2
+H57=SetCarriergas2		;SET Carriergas Flow Hopper 2
+H58=SetStirrerSpeed2	;SET Stirrer Speed 2
+STOPRE
+G4 F2
+H51=3		            ;Shutter Open, Shieldgas ON
+G4 F6
+H56=SetPowder2		    ;SET Powder feed revolution speed Disc 2
+H57=SetCarriergas2		;SET Carriergas Flow Hopper 2
+H58=SetStirrerSpeed2	;SET Stirrer Speed 2
+G4 F1
+H51=15	                ;Shutter Open, Shieldgas ON, Powder ON
+G4 F5
+M17
+;==================================================================
+
+Final:
+M17
+
+Error1:
+MSG("Keine Pulverwerte eingegeben!")
+M0
+Error2:
+MSG("Pulver1 und Pulver2 angewaehlt! Doppeleingabe nicht moeglich!")
+M1
+Gotof Final
+Error3:
+MSG("Keine Gaswerte eingegeben!")
+M0
+Error4:
+MSG("Carriergas1 und Carriergas2 angewaehlt! Doppeleingabe nicht moeglich!")
+M1
+Gotof Final
+Error5:
+MSG("Keine Stirrer Werte eingegeben!")
+M1
+Gotof Final
+Error6:
+MSG("Stirrer1 und Stirrer2 angewaehlt! Doppeleingabe nicht moeglich!")
+M1
+Gotof Final
+Error7:
+MSG("Falsche Werteingabe! Ueberpruefe ob alle Werte fuer den selben Pulvertopf gewaehlt sind!")
+M0
+Gotof Final
+Error8:
+MSG("Werteingabe zu hoch! Werte muessen zwischen 0-1000 liegen!")
+M0
+

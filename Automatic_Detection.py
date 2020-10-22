@@ -74,8 +74,10 @@ def auto_detection(img_all, co_num):
         img_rw = img_r[r0, :]
         rw0=0
         rw1=0
-        
-        for i in range(r0):
+        # if r0 > 500:
+        #     return 0
+        # for i in range(r0):
+        for i in range(w):
             if img_rw[i] > 20:
                 rw0 = i
                 break
@@ -104,9 +106,12 @@ def auto_detection(img_all, co_num):
 
 def meltpool_width(frame):
     #処理開始
-    img_all = Image.open('data/temp/2020_0202/result_150/sample_video_img_' + str(frame) + '.bmp')
+    # img_all = Image.open('data/temp/2020_0202/result_150/sample_video_img_' + str(frame) + '.bmp')
+    img_all = Image.open('frame_data/20200823/with_dwell_40/sample_video_img_' + str(frame) + '.bmp')
+    # img_all = Image.open('frame_data/20200823/without_dwell_40/sample_video_img_' + str(frame) + '.bmp')
     #sum_r = np.zeros(13)
-    print("フレーム数：" + str(frame))
+    #sum_r = np.zeros(13)
+    # print("フレーム数：" + str(frame))
     img_r = auto_detection(img_all,0)#自動検出機能
     if np.all(img_r) == 0:
         return 0
@@ -118,7 +123,9 @@ def meltpool_width(frame):
     
 def meltpool_size(frame):
     #処理開始
-    img_all = Image.open('data/temp/2020_0202/result_150/sample_video_img_' + str(frame) + '.bmp')
+    # img_all = Image.open('data/temp/2020_0202/result_150/sample_video_img_' + str(frame) + '.bmp')
+    # img_all = Image.open('frame_data/20200823/with_dwell_40/sample_video_img_' + str(frame) + '.bmp')
+    img_all = Image.open('frame_data/20200823/without_dwell_40/sample_video_img_' + str(frame) + '.bmp')
     #sum_r = np.zeros(13)
     print("フレーム数：" + str(frame))
     img_r = auto_detection(img_all,0)#自動検出機能
@@ -133,7 +140,10 @@ def meltpool_size(frame):
 
 def RGBvalue(frame):
     #処理開始
-    img_all = Image.open('data/temp/2020_0202/result_150/sample_video_img_' + str(frame) + '.bmp')
+    # img_all = Image.open('data/temp/2020_0202/result_150/sample_video_img_' + str(frame) + '.bmp')
+    # img_all = Image.open('frame_data/temp/2020_0202/result_150/sample_video_img_' + str(frame) + '.bmp')
+    # img_all = Image.open('frame_data/20200823/with_dwell_40/sample_video_img_' + str(frame) + '.bmp')
+    img_all = Image.open('frame_data/20200823/without_dwell_40/sample_video_img_' + str(frame) + '.bmp')
     #sum_r = np.zeros(13)
     data = np.zeros(60)
     print("フレーム数：" + str(frame))

@@ -62,22 +62,40 @@ if __name__ == '__main__':
     以降328あげれば2層上がる
     
     """
-    bottom = 240
-    top = 300
+    bottom = 0
+    top = 40
     #分析層数
-    start = 1
-    n = 1
-    step = 1
+    start = 1 #開始層数
+    n = 38 #分析する層数
+    step = 2 #１つ飛ばしで分析
     y_all = np.array([0,0])
     for layer in range(start,start+n,step):
         print(str(layer) + "層目")
+        # # with_dwell
+        # if layer%2 == 0:#偶数層
+        #     print("偶数層")
+        #     frame = int(125 + (int(layer/2)-1)*280)
+        # else:#奇数層
+        #     print("奇数層")
+        #     frame = int(254 + (int(layer-1)/2)*280)
+        # frame = 5294
+        # without_dwell
         if layer%2 == 0:#偶数層
             print("偶数層")
-            frame = int(240 + (int(layer/2)-1)*328)
+            frame = int(155 + (int(layer/2)-1)*100)
         else:#奇数層
             print("奇数層")
-            frame = int(80 + (int(layer-1)/2)*328)
-        for i in range(frame,frame+61):
+            frame = int(100 + (int(layer-1)/2)*100)
+        # frame = 1995
+        # # result_150
+        # if layer%2 == 0:#偶数層
+        #     print("偶数層")
+        #     frame = int(240 + (int(layer/2)-1)*328)
+        # else:#奇数層
+        #     print("奇数層")
+        #     frame = int(80 + (int(layer-1)/2)*328)
+        # for i in range(frame,frame+61):
+        for i in range(frame,frame+50):
             data = np.append(data,meltpool_size(i))
         data = data[13:]
         y=data
@@ -88,8 +106,8 @@ if __name__ == '__main__':
             y1 = data
         else:
             y2 = data
-        x = np.arange(frame, frame+61)
-        #x = np.arange(61)
+        # x = np.arange(frame, frame+61)
+        x = np.arange(frame, frame+50)
         data = np.zeros(13)
         #plt.plot(x, y, 'o')
         fig = plt.figure()
@@ -108,7 +126,7 @@ if __name__ == '__main__':
     ax2 = fig.add_subplot(2, 1, 2)
     ax2.plot(x_all, y_all, marker="o", color = "blue")
     #plt.title("relation of layer and melt pool size")
-    
+    plt.show()
     
     #処理終了
     #処理時間の計算と表示

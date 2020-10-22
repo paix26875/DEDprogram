@@ -58,19 +58,37 @@ if __name__ == '__main__':
     bottom = 240
     top = 300
     #分析層数
-    start = 2
-    n = 1
-    step = 1
+    start = 1
+    n = 38
+    step = 2
     y_all = np.array([0,0])
     for layer in range(start,start+n,step):
         print(str(layer) + "層目")
+        # with_dwell
         if layer%2 == 0:#偶数層
             print("偶数層")
-            frame = int(240 + (int(layer/2)-1)*328)
+            frame = int(125 + (int(layer/2)-1)*280)
         else:#奇数層
             print("奇数層")
-            frame = int(80 + (int(layer-1)/2)*328)
+            frame = int(254 + (int(layer-1)/2)*280)
+        # frame = 5294
+        # # without_dwell
+        # if layer%2 == 0:#偶数層
+        #     print("偶数層")
+        #     frame = int(155 + (int(layer/2)-1)*100)
+        # else:#奇数層
+        #     print("奇数層")
+        #     frame = int(100 + (int(layer-1)/2)*100)
+        # frame = 1995
+        # # result_150
+        # if layer%2 == 0:#偶数層
+        #     print("偶数層")
+        #     frame = int(240 + (int(layer/2)-1)*328)
+        # else:#奇数層
+        #     print("奇数層")
+        #     frame = int(80 + (int(layer-1)/2)*328)
         for i in range(frame,frame+61):
+        # for i in range(frame,frame+50):
             data = np.append(data,meltpool_width(i))
         data = data[13:]
         y=data
@@ -82,6 +100,7 @@ if __name__ == '__main__':
         else:
             y2 = data
         x = np.arange(frame, frame+61)
+        # x = np.arange(frame, frame+50)
         #x = np.arange(61)
         data = np.zeros(13)
         #plt.plot(x, y, 'o')
@@ -94,13 +113,13 @@ if __name__ == '__main__':
     #plt.plot(x_all, y_all, 'o')
     
     
-    
     # 1行2列に分割した中の1(左側)
     
     # 1行2列に分割した中の2(右側)
     ax2 = fig.add_subplot(2, 1, 2)
     ax2.plot(x_all, y_all, marker="o", color = "blue")
     #plt.title("relation of layer and melt pool size")
+    plt.show()
     
     
     #処理終了

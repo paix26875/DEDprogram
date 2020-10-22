@@ -14,7 +14,7 @@ Created on Sun Apr 26 18:03:21 2020
 #-*- using:utf-8 -*-
 import time
 import sys, time
-sys.path.append('/Users/paix/Desktop/Python/Automatic_Detection.py')
+# sys.path.append('/Users/paix/Desktop/Python/Automatic_Detection.py')
 import numpy as np
 import csv
 from matplotlib import pyplot as plt
@@ -55,8 +55,8 @@ if __name__ == '__main__':
     以降328あげれば2層上がる
     
     """
-    bottom = 240
-    top = 300
+    bottom = 1000
+    top = bottom + 50
     n = 0
     for i in range(bottom,top):
         data += RGBvalue(i)
@@ -77,9 +77,15 @@ if __name__ == '__main__':
         y=data
     """
     y=data/np.sum(data)
+    # array_info(x)
+    # array_info(y)
     y_all=data/44
     plot(x, y)#プロットと平滑線を描画
+    
 
+    # plt.plot(x, y)
+    # # [<matplotlib.lines.Line2D object at 0x121ca3be0>]
+    plt.show()
     #処理終了
     #処理時間の計算と表示
     elapsed_time = time.time() - start

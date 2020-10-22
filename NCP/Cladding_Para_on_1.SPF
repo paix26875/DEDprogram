@@ -1,0 +1,12 @@
+PROC Cladding_Para_on_1(REAL SetLaser)
+;Version 1.1 16-02-02
+
+M11;C-AXIS-CLAMPING RELEASE
+M23;A-AXIS-CLAMPING RELEAE
+
+H52=0		;RESET Laser Power
+;G4 F6
+H52=SetLaser            ;SET Laser Power (current)
+;M17
+Final:
+;M17
