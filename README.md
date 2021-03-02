@@ -7,7 +7,8 @@ Python_Labの開発ルールを書いていく。
 基本：https://qiita.com/simonritchie/items/49e0813508cad4876b5a
 より詳細：https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
 
-# 基本の書き方
+## 基本の書き方
+
 関数の直下に書く
 コメントは1行72文字までに収める
 ```
@@ -19,12 +20,14 @@ def get_fruit_price():
     pass
 ```
 
-# 引数の書き方
+## 引数の書き方
+
 1. Parametersを記載
 2. Parametersの下にハイフンを追加して区切る
 3. 引数名：型の形式で記載
 4. 引数名の下にインデントを加えて引数の内容を記載
-```
+
+```python
 def get_fruit_price(fruit_id):
     """
     果物の値段を取得する。
@@ -39,9 +42,11 @@ def get_fruit_price(fruit_id):
     pass
 ```
 
-# 返り値の書き方
+## 返り値の書き方
+
 引数のParametersをReturnsに変更するだけ
-```
+
+```python
 def get_fruit_price(fruit_id, location_id):
     """
     果物の値段を取得する。

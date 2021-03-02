@@ -9,7 +9,7 @@ Created on Sat Oct 26 03:35:39 2019
 import cv2
 import os
 import numpy as np
-import skvideo.io #追加
+# import skvideo.io #追加
 
 def saveAllFrames(video_path, dir_path, basename, ext='bmp'):
     """
@@ -50,7 +50,9 @@ def saveAllFrames(video_path, dir_path, basename, ext='bmp'):
             return
 
 # mac
-saveAllFrames('raw_data/20200823/without_dwell_40.avi', 'frame_data/20200823/test', 'img')
+# saveAllFrames('raw_data/20201123/10/CMOS/1800.avi', 'frame_data/20201123/10/1800', 'img')
+saveAllFrames('raw_data/20201123/perspective10/9,10.avi', 'frame_data/20201123/10/perspective', 'img')
+
 
 # windows
 # saveAllFrames('C:/Users/paix/Desktop/実験データ/20200217/'+str(POWER)+'W.avi', 'data/temp/2020_0217/result_'+str(POWER)+'W', 'img')
