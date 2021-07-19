@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Insert title here</title>
+  </head>
+<body>
+  <form>
+    <!-- サーバーにメッセージを送信するテキストボックス -->
+    <input id="textMessage" type="text">
+    <!-- 送信ボタン -->
+    <input onclick="sendMessage()" value="Send" type="button">
+    <!-- 接続終了ボタン -->
+    <input onclick="disconnect()" value="Disconnect" type="button">
+  </form>
+  <br />
+  <!-- 出力 area -->
+  <textarea id="messageTextArea" rows="10" cols="50"></textarea>
+  <script type="text/javascript">
+    // ウェブサーバを接続する。
+    var webSocket = new WebSocket("ws://localhost:9998");
+    // ウェブサーバから受信したデータを出力するオブジェクトを取得する。
+    var messageTextArea = document.getElementById("messageTextArea");
+    // ソケット接続すれば呼び出す関数。
+    webSocket.onopen = function(message){
+      messageTextArea.value += "Server connect...\n";
+    };
+    // ソケット接続が切ると呼び出す関数。
+    webSocket.onclose = function(message){
+      messageTextArea.value += "Server Disconnect...\n";
+    };
+    // ソケット通信中でエラーが発生すれば呼び出す関数。
+    webSocket.onerror = function(message){
+      messageTextArea.value += "error...\n";
+    };
+    // ソケットサーバからメッセージが受信すれば呼び出す関数。
+    webSocket.onmessage = function(message){
+      // 出力areaにメッセージを表示する。
+      messageTextArea.value += "Recieve From Server => "+message.data+"\n";
+    };
+    // サーバにメッセージを送信する関数。
+    function sendMessage(){
+      var message = document.getElementById("textMessage");
+      messageTextArea.value += "Send to Server => "+message.value+"\n";
+      // WebSocketでtextMessageのオブジェクトの値を送信する。
+      webSocket.send(message.value);
+      //textMessageオブジェクトの初期化
+      message.value = "";
+    }
+    // 通信を切断する。
+    function disconnect(){
+      webSocket.close();
+    }
+  </script>
+</body>
+</html>
