@@ -10,7 +10,7 @@ H53=0		;RESET Powder feed Disc 1
 H54=0		;RESET Carriergas Flow 1
 H55=0		;RESET Stirrer Speed 1
 H56=0		;RESET Powder feed Disc 2
-H57=0		;RESET Carriergas Flow 2
+H57=0		;RESET Carriergas F2 2
 H58=0		;RESET Stirrer Speed 2
 G4 F1
 
