@@ -100,7 +100,7 @@ def timeAverage(laser_power, middle_frame_number, frames):
     
     return TEMP
 
-def calibration(fg, TEMP, haszero, average, samplenumber, laser_power=1600, RGBmin=25, RGBmax=255):
+def calibration(fg, TEMP, haszero, average, samplenumber, dir_name, mid_frames, laser_power=1600, RGBmin=25, RGBmax=255):
     """
     二色温度計画像とCMOSカメラ画像の比較をする
     その結果をcsvファイルに出力する
@@ -119,6 +119,10 @@ def calibration(fg, TEMP, haszero, average, samplenumber, laser_power=1600, RGBm
         平均する温度範囲
     samplenumber : int
         データとして扱うサンプルの数の閾値
+    dir_name : str
+        溶融地画像があるディレクトリ
+    mid_frames : numpy
+        溶融地の真ん中のフレーム
 
     Returns
     -------
@@ -127,12 +131,6 @@ def calibration(fg, TEMP, haszero, average, samplenumber, laser_power=1600, RGBm
     """
     height, width = TEMP.shape
     # キャリブレーション
-    if fg == 'f4-g16':
-        dir_name = "/Users/paix/Desktop/Python_lab/frame_data/20210706/after_projection/f4-g16/"
-        mid_frames = [28, 41, 31, 39, 35]
-    elif fg == 'f4-g24':
-        dir_name = "/Users/paix/Desktop/Python_lab/frame_data/20210706/after_projection/f4-g24/"
-        mid_frames = [32, 38, 32, 26, 56]
     mid_frame = mid_frames[int((laser_power-1400)/100)]
     img_CMOS = np.array(Image.open(dir_name + str(laser_power) + '/img_' + str(mid_frame) + '.bmp'))
         
@@ -363,7 +361,7 @@ if __name__ == '__main__':
     average = 10
     samplenumber = 5
     for fg in ['f4-g16', 'f4-g24']:
-    # for fg in ['f4-g24']:
+        # for fg in ['f4-g24']:
         # for average in range(10, 60, 10):
         for average in range(10, 20, 10):
             # for haszero in [True, False]:
@@ -379,12 +377,17 @@ if __name__ == '__main__':
                     height = 90
                     width = 120
                     if fg == 'f4-g16':
+                        dir_name = "/Users/paix/Desktop/Python_lab/frame_data/20210706/after_projection/f4-g16/"
+                        mid_frames = [28, 41, 31, 39, 35]
                         RGBmin = 17
                     elif fg == 'f4-g24':
+                        dir_name = "/Users/paix/Desktop/Python_lab/frame_data/20210706/after_projection/f4-g24/"
+                        mid_frames = [32, 38, 32, 26, 56]
                         RGBmin = 18
                     RGBmax = 255
 
                     TEMP = timeAverage(laser_power, middle_frame_number, frames)
+                    csv_path = calibration(fg, TEMP, haszero, average, samplenumber, dir_name, mid_frames, laser_power=laser_power, RGBmin=RGBmin)
                     coefs = multipleLinearRegressionAnalysis(csv_path, summary=True)
                     ic(coefs)
                     for laserpower in range(1400, 1900, 100):
