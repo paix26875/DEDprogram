@@ -14,7 +14,7 @@ from icecream import ic
 # numpyの配列表示数の設定
 np.set_printoptions(threshold=np.inf)
 
-def timeAverage(laser_power, begin_frame_number, end_frame_number):
+def timeAverage(laser_power, middle_frame_number, frames):
     """
     二色温度計画像を時間平均する
 
@@ -33,7 +33,7 @@ def timeAverage(laser_power, begin_frame_number, end_frame_number):
         二色温度計の時間平均値
     """
     # pathの設定
-    total_frame_number = end_frame_number - begin_frame_number + 1
+    total_frame_number = frames + 1
     directory_name = "/Users/paix/Desktop/Python_lab/frame_data/20210706/pyrometer_short/"
     base_name = directory_name + str(laser_power) + "/" + str(laser_power) + "0OUT"
     os.makedirs('frame_data/20210706/colorimg/', exist_ok=True)
@@ -54,6 +54,8 @@ def timeAverage(laser_power, begin_frame_number, end_frame_number):
     else:
     # 温度の時間平均算出開始
         # 1枚目の溶融池画像を格納
+        begin_frame_number = middle_frame_number - int(frames/2)
+        end_frame_number = middle_frame_number + int(frames/2)
         img_pil = Image.open(base_name + str(begin_frame_number) + ".BMP")
         img_np = np.array(img_pil)
         rough_trimmed_img = tr.img_trimming(img_np, 240, 330, 640, 1279)
@@ -356,6 +358,7 @@ def CMOStoTwoColor(laser_power, fg, coefs, save_path, threshold = 20):
 if __name__ == '__main__':
     # レーザ出力とフレーム数の設定
     frames = 200
+    middle_frame_numbers = [4605, 4608, 4645, 4641, 4666]
     laser_power = 1600
     average = 10
     samplenumber = 5
@@ -367,21 +370,11 @@ if __name__ == '__main__':
             for haszero in [True]:
                 # for samplenumber in range(1,6):
                 for samplenumber in range(5,6):
-                    if laser_power == 1400:
-                        begin_frame_number = 4605
-                    if laser_power == 1500:
-                        begin_frame_number = 4608
-                    if laser_power == 1600:
-                        begin_frame_number = 4645
-                    if laser_power == 1700:
-                        begin_frame_number = 4641
-                    if laser_power == 1800:
-                        begin_frame_number = 4666
+                    middle_frame_number = middle_frame_numbers[int((laser_power - 1400) / 100)]
                     if haszero:
                         zero = 'haszero'
                     else:
                         zero = 'nonzero'
-                    end_frame_number = begin_frame_number + frames
                     RGBvalue = 0
                     height = 90
                     width = 120
@@ -391,8 +384,7 @@ if __name__ == '__main__':
                         RGBmin = 18
                     RGBmax = 255
 
-                    TEMP = timeAverage(laser_power, begin_frame_number, end_frame_number)
-                    csv_path = calibration(fg, TEMP, haszero, average, samplenumber, laser_power=laser_power, RGBmin=RGBmin)
+                    TEMP = timeAverage(laser_power, middle_frame_number, frames)
                     coefs = multipleLinearRegressionAnalysis(csv_path, summary=True)
                     ic(coefs)
                     for laserpower in range(1400, 1900, 100):
