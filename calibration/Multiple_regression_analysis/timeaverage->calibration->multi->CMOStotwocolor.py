@@ -14,6 +14,40 @@ from icecream import ic
 # numpyの配列表示数の設定
 np.set_printoptions(threshold=np.inf)
 
+def extractMeltpoolFromCMOS(src_path, dst_path):
+    """
+    CMOSの溶融地画像について，閾値を基に溶融地を抽出する
+    閾値より小さいピクセルのRGB値を0にする
+
+    Parameters
+    ----------
+    src_path : str
+        元画像のディレクトリのパス
+    dst_path : str
+        溶融地のみ抜き出した画像を保存するディレクトリのパス
+
+    Returns
+    -------
+    null
+    """
+    img = np.array(Image.open(src_path + '/img_0.bmp'))
+    # ic(img.shape)
+    RGBmaxWithoutMeltpool = np.max(np.max(img, axis=0), axis=0)
+    files = os.listdir(src_path)  
+    count = len(files)
+    ic(count)
+    ic(RGBmaxWithoutMeltpool)
+    for i in range(count):
+        src = np.array(Image.open(src_path + '/img_' + str(i) + '.bmp'))
+        dst = np.zeros_like(src)
+        dst[:,:,0] += np.where(src[:,:,0] > RGBmaxWithoutMeltpool[0], src[:,:,0], 0)
+        dst[:,:,1] += np.where(src[:,:,1] > RGBmaxWithoutMeltpool[1], src[:,:,1], 0)
+        dst[:,:,2] += np.where(src[:,:,2] > RGBmaxWithoutMeltpool[2], src[:,:,2], 0)
+        dst = np.array(dst, dtype=np.int8)
+        pil_img = Image.fromarray(dst, mode="RGB")
+        os.makedirs(dst_path, exist_ok=True)
+        pil_img.save(dst_path + '/img_' + str(i) + '.bmp')
+
 def timeAverage(laser_power, middle_frame_number, frames):
     """
     二色温度計画像を時間平均する
