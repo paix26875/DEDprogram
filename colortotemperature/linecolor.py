@@ -6,12 +6,19 @@ import numpy as np
 np.set_printoptions(threshold=np.inf)
 
 if __name__ == '__main__':
-    base_name = "/Users/paix/Desktop/Python_lab/colortotemperature/"
-    img_sum = Image.open(base_name + "1310-1470.BMP")
-    img_sum = np.array(img_sum)
+    print('which? high / low')
+    mode = input()
+    if mode == 'high':
+        base_name = "/Users/paix/Desktop/Python_lab/colortotemperature/high/"
+        img_sum = Image.open(base_name + "1310-1470.BMP")
+        temp = 1475
+    elif mode == 'low':
+        base_name = "/Users/paix/Desktop/Python_lab/colortotemperature/low/"
+        img_sum = Image.open(base_name + "800-960.BMP")
+        temp = 965
+        img_sum = np.array(img_sum)
     img_sum = img_sum[0 : 479, 655 : 656]
     img_sum = np.squeeze(img_sum)
-    temp = 1475
     for i in range(0, 7):
         img_pil = Image.open(base_name + str(temp) + "-" + str(temp + 160) + ".BMP")
         img = np.array(img_pil)
